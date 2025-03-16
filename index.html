@@ -20,23 +20,29 @@
         <header>
             <h1 class="headline">PokéDex</h1>
             <p>Gotta Catch 'Em All </p>
+            <form onsubmit="return false">
+                <input type="text" id="search" placeholder="Enter Name to Search....." onkeyup="searchPokemon()">
+            </form>
         </header>
-        <input type="text" id="search" placeholder="Enter Name to Search....." onkeyup="searchPokemon()">
-        <div class="pokedex">
-            <div id="left-side">
-                <div class="header"></div>
-                <img id="left-side-image" src="" alt=""></img>
-                <div id="content-left-side">
-                </div> 
+        <section>
+            <div class="pokedex">
+                <div id="left-side">
+                    <div class="header"></div>
+                    <img id="left-side-image" src="" alt=""></img>
+                    <div id="content-left-side">
+                    </div>
+                </div>
+                <div id="right-side">
+                    <ol class="pokedex-ul">
+                    </ol>
+                </div>
             </div>
-            <div id="right-side">
-                <ol class="pokedex-ul">
-                </ol>
+            <div class="buttons">
+                <button class="load-more-button" onclick="load20MorePokemon()">Load <span
+                        class="load-more-button-number">20</span> More</button>
+                <button class="load-all-button" onclick="loadAllPokemon()">Load All</button>
             </div>
-        </div>
-        <button class="load-more-button" onclick="load20MorePokemon()">Load <span
-                class="load-more-button-number">20</span> More</button>
-        <button class="load-all-button" onclick="loadAllPokemon()">Load All</button>
+        </section>
     </div>
     <div id="dialog" class="d-none">
         <div id="loader"></div>
