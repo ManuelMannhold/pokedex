@@ -14,19 +14,18 @@ function displayPokemonToOnclickTemplate(pokemonData, pokemonId, cries) {
     <div class="show-pokemon-left-side">
     <div class="show-pokemon-header">
         <div class="show-pokemon-name">
-            <span class="show-pokemon-name">${pokemonData.name}</span>
-            <span class="show-pokemon-id">#${pokemonData.id}</span>
+            <span class="show-pokemon-name">${pokemonData.name} #${pokemonData.id}</span>
+            <button onclick="playSound('${cries}')" class="play-button-sound"><img class="play-button-sound-image" src="./img/play-button.png"></img></button>
         </div>
-        <button onclick="playSound('${cries}')" class="play-button-sound"><img class="play-button-sound-image" src="./img/play-button.png"></img></button>
         <div class="show-pokemon-info-and-image">
+        <span class="pokemon-info">
             <img class="show-pokemon-image" src="${pokemonData.sprites.other.dream_world.front_default}"></img>
-        <div class="show-pokemon-info-span">
+            <div id="types-background">${getPokemonType(pokemonData)}
+        </div>
+        </span>
+            <div class="show-pokemon-characteristics">
             <span>Height: ${pokemonData.height}"</span>
             <span>Weight: ${pokemonData.weight}</span>
-        </div>
-        </div>
-            <div class="show-pokemon-types">
-            <div id="types-background">${getPokemonType(pokemonData)}
             </div>
             </div>
     </div>
