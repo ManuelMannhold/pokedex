@@ -11,7 +11,7 @@ async function init() {
   await allPokemon();
 }
 
-async function fetchData() {
+async function fetchData(offset, limit) {
   let url = `https://pokeapi.co/api/v2/pokemon/?limit=${limit}&offset=${offset}`;
   let response = await fetch(url);
   let data = await response.json();
@@ -51,11 +51,15 @@ async function displayPokemonToOnclick(pokemonId) {
   let container = document.getElementById("left-side");
   let cries = pokemonData.cries.latest;
 
-  container.innerHTML = displayPokemonToOnclickTemplate(
-    pokemonData,
-    pokemonId,
-    cries
-  );
+  if (window.innerHeight < 650) {
+    displayPokemonMobile(pokemonId);
+  } else {
+    container.innerHTML = displayPokemonToOnclickTemplate(
+      pokemonData,
+      pokemonId,
+      cries
+    );
+  }
 }
 
 function playSound(soundURL) {
@@ -67,7 +71,6 @@ async function showStatsOnChart(pokemonId) {
   let response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`);
   let pokemonData = await response.json();
   let container = document.getElementById("content-left-side");
-  container.style.overflowY = "visible";
 
   container.innerHTML = `
       <canvas id="myChart"></canvas>
@@ -91,16 +94,19 @@ function getPokemonType(pokemonData) {
   return pokeTypes;
 }
 
-function load20MorePokemon() {
+async function load20MorePokemon() {
   let loader = document.getElementById("dialog");
-  loader.classList.remove("d-none");
   offset += limit;
 
-  setTimeout(function () {
-    loader.classList.add("d-none");
-  }, 2000);
+  loader.classList.remove("d-none");
 
-  fetchData(offset, limit);
+  try {
+    fetchData(offset, limit);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    loader.classList.add("d-none");
+  }
 }
 
 function searchPokemon() {
@@ -121,23 +127,26 @@ function searchPokemon() {
 async function loadAllPokemon() {
   let loader = document.getElementById("dialog");
 
-  if (
-    window.confirm(
-      `Really Load all Pokemons?It Takes a Minute to Load all ${allPokemons.length} Pokemon`
-    )
-  ) {
-    offset = 20;
-    limit += 1302;
-    limit += offset;
+  document.querySelector(".container").innerHTML = `
+    <dialog open class="dialog-load-all-pokemon">
+      Wirklich alle ${allPokemons.length} Laden?
+      <form>
+        <button class="button" onclick="loadAll()">Ok</button>
+        <button class="button" onclick="stopLoadAll()">Abbrechen</button>
+      </form>
+    </dialog>
+  `;
+}
 
-    if (offset < limit) {
-      document.getElementById("dialog").classList.remove("d-none");
-    }
-    setTimeout(function () {
-      loader.classList.add("d-none");
-    }, 60000);
-    await fetchData(offset, limit);
-  }
+function stopLoadAll() {
+  dialog.close();
+}
+
+function loadAll() {
+  offset = 20;
+  limit += 1302;
+  limit += offset;
+  fetchData(offset, limit);
 }
 
 async function getMovesOfPokemon(pokemonId) {
@@ -182,8 +191,10 @@ function getMovesChartNotNull(chart, content, pokemonData) {
   }
 }
 
-function loadingSpinner() {
-  let loader = document.getElementById("loader");
+function displayPokemonMobile(i) {
+  let mobile = document.getElementById("display-pokemon-mobile");
 
-  loader.remove("d-none");
+  mobile.innerHTML += `
+      <div>${pokemonData[i].name}</div>
+    `;
 }
